@@ -1,0 +1,15 @@
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/install/strip.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/install/local.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/install.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/list_install_components.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/edit_cache.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/wheeldrop.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/rebuild_cache.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/play_song.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/packets.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/battery_level.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/drive_circle.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/create.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/leds.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/bumpers.dir
+/home/mrzamboni/catkin_ws/src/libcreate/CMakeFiles/cliffs.dir

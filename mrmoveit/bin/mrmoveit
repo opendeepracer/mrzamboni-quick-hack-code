@@ -1,0 +1,123 @@
+#!/usr/bin/env python
+# from __future__ import print_function
+
+import roslib
+import sys
+import rospy
+
+import base64
+import json
+import numpy as np
+import math
+
+from std_msgs.msg import Empty,String, Float32
+from geometry_msgs.msg import Twist
+from mrinfer.msg import InferResultsArray, InferResults
+
+action_speed={}
+action_angle={}
+actions_cnt=0
+action_state = "stop"
+action_scale_speed = 1
+max_speed = 0.5 # m/s
+
+def startNode(model_actions="/home/mrzamboni/model/model_metadata.json"):
+
+    global actions_cnt  
+    global action_speed
+    global action_angle
+
+
+    with open(model_actions,'r') as actionfile:
+        raw_actions=json.loads(actionfile.read())
+    
+    # process actions 
+    action_space = raw_actions['action_space'] 
+    actions_cnt  = len(action_space)
+    for i in range(0,actions_cnt-1):
+        action_label=action_space[i]['index']
+        action_speed[action_label] = action_space[i]['speed']
+        action_angle[action_label] = action_space[i]['steering_angle']
+       
+    rospy.init_node('mrinfer', anonymous=True)
+    mrmoveit_state_pub.publish(action_state)
+        
+    while not rospy.is_shutdown():
+        rospy.loginfo("starting spinning")
+        rospy.spin()
+    rospy.loginfo("Shutting down")
+
+def moveItCallback(rl_results):
+
+    global actions_cnt  
+    global action_speed
+    global action_angle
+    global action_state 
+    global max_speed
+
+    rv = rl_results.results 
+    prob = 0
+    action = -1 
+    #find the action to take
+    for i in range(0,actions_cnt-1  ):
+        if rv[i].classProb > prob:
+            action = rv[i].classLabel
+            prob   = rv[i].classProb
+    speed = action_speed[action]
+    sspeed = speed * action_scale_speed 
+    aspeed = min(sspeed,max_speed)
+    
+    wb  = 0.16 # wheelbase deepracer in m
+
+    angle = action_angle[action]
+    if angle != 0 :
+        ar = math.radians(angle)
+        rtc = wb/math.sin(ar) # radius turning circle in m
+        ctc = rtc*2*math.pi # circumference of turning Circle
+        ptct = aspeed/ctc # portion of the circle traveled in 1 sec
+        angularz = ptct * 2 * math.pi
+    else :
+        angularz = 0 
+
+    if action_state == "drive":
+        drv = Twist()
+        drv.linear.x = aspeed
+        drv.angular.z = angularz
+        mrmoveit_twist_pub.publish(drv)
+        rospy.loginfo("taking action %d (prob %f) : speed %f angle %f speed scale %f scaled speed %f actual speed %f angular %f \n" % (action,prob,speed,angle,action_scale_speed,sspeed,aspeed,angularz))
+
+def speedCallback(speed):
+    global action_scale_speed
+    action_scale_speed = speed.data 
+
+def driveMoveCallback(notused):
+    global action_state
+    if action_state != "drive":
+        action_state = "drive"
+        rospy.loginfo("State:drive")
+        mrmoveit_state_pub.publish(action_state)
+
+def stopMoveCallback(notused):
+    global action_state
+    if action_state != "stop":
+        rospy.loginfo("State:stop")
+        action_state = "stop"
+        stopdrv = Twist()
+        stopdrv.linear.x = 0
+        stopdrv.angular.z = 0
+        mrmoveit_twist_pub.publish(stopdrv)
+        mrmoveit_state_pub.publish(action_state)
+
+
+
+
+mrmoveit_result_sub    = rospy.Subscriber("rl_results",InferResultsArray,moveItCallback)
+mrmoveit_drive_sub     = rospy.Subscriber("moveit/drive",Empty,driveMoveCallback)
+mrmoveit_speed_sub     = rospy.Subscriber("moveit/speed",Float32,speedCallback)
+mrmoveit_stop_sub      = rospy.Subscriber("moveit/stop",Empty,stopMoveCallback)
+
+mrmoveit_twist_pub     = rospy.Publisher("/cmd_vel",Twist,queue_size=1)
+mrmoveit_state_pub     = rospy.Publisher("moveit/state",String,queue_size=1,latch=True)
+
+if __name__ == '__main__':
+    startNode()

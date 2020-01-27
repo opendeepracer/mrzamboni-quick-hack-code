@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<launch>
+  <arg name="joy_dev" default="/dev/input/by-id/usb-Logitech_Wireless_Gamepad_F710_3CC69C47-joystick" />
+  <arg name="joy_config" default="log710x" />
+  <arg name="teleop_config" default="$(find ca_tools)/config/$(arg joy_config).yaml" />
+
+  <rosparam file="$(arg teleop_config)" command="load" />
+
+  <node pkg="joy" type="joy_node" name="joy_node">
+    <param name="dev" value="$(arg joy_dev)" />
+    <param name="deadzone" value="0.2" />
+    <param name="autorepeat_rate" value="20" />
+  </node>
+
+  <node pkg="joy_teleop" type="joy_teleop.py" name="joy_teleop">
+  </node>
+  <node pkg = "jetson_cam" type = "jetson_cam" name="jetson_cam" output="screen"> 
+  </node>
+  <node pkg = "mrinfer" type = "mrinfer" name="mrinfer" output="screen"/> 
+  <node name="web_video_server" pkg="web_video_server" type="web_video_server" />
+
+  <include file="$(find ca_driver)/launch/create_2.launch" />
+</launch>
+

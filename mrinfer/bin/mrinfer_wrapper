@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+export PYTHONPATH=/home/mrzamboni/catkin_ws/install_isolated/lib/python3/dist-packages:home/mrzamboni/catkin_ws/install_isolated/lib/python3/dist-packages:/home/mrzamboni/catkin_ws/devel_isolated/jetson_cam/lib/python2.7/dist-packages:/home/mrzamboni/catkin_ws/install_isolated/lib/python2.7/dist-packages:/home/mrzamboni/catkin_ws/devel_isolated/ca_msgs/lib/python2.7/dist-packages:/opt/ros/melodic/lib/python2.7/dist-packages
+rosrun mrinfer mrinfer.py
