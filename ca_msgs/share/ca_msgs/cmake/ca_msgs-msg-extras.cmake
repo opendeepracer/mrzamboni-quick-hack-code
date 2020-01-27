@@ -1,0 +1,2 @@
+set(ca_msgs_MESSAGE_FILES "/home/mrzamboni/catkin_ws/src/create_autonomy/ca_msgs/msg/Bumper.msg;/home/mrzamboni/catkin_ws/src/create_autonomy/ca_msgs/msg/ChargingState.msg;/home/mrzamboni/catkin_ws/src/create_autonomy/ca_msgs/msg/DefineSong.msg;/home/mrzamboni/catkin_ws/src/create_autonomy/ca_msgs/msg/Mode.msg;/home/mrzamboni/catkin_ws/src/create_autonomy/ca_msgs/msg/PlaySong.msg")
+set(ca_msgs_SERVICE_FILES "")

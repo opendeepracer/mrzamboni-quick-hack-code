@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/mrzamboni/catkin_ws/devel_isolated/create_autonomy/setup.sh

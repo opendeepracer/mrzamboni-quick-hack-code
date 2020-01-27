@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/mrzamboni/catkin_ws/devel_isolated/mrinfer/setup.sh
